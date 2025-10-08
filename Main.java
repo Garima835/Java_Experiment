@@ -1,42 +1,33 @@
-import java.io.*;
+import java.util.*;
 
-class Student implements Serializable {
-    private static final long serialVersionUID = 1L; 
+class Employee {
+    int id;
+    String name;
+    double salary;
 
-    private int studentID;
-    private String name;
-    private double grade;
-
-    public Student(int studentID, String name, double grade) {
-        this.studentID = studentID;
+    Employee(int id, String name, double salary) {
+        this.id = id;
         this.name = name;
-        this.grade = grade;
+        this.salary = salary;
     }
 
-    public int getStudentID() { return studentID; }
-    public String getName() { return name; }
-    public double getGrade() { return grade; }
+    @Override
+    public String toString() {
+        return id + " - " + name + " - $" + salary;
+    }
 }
 
-public class Main {
+public class PartA {
     public static void main(String[] args) {
-        Student student = new Student(101, "Arjun", 9.5);
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee(3, "Arjun", 55000));
+        employees.add(new Employee(1, "Priya", 72000));
+        employees.add(new Employee(2, "Keerti", 48000));
 
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("student.ser"))) {
-            oos.writeObject(student);
-            System.out.println("Student object has been serialized to 'student.ser'.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Sort by salary ascending using lambda
+        employees.sort((e1, e2) -> Double.compare(e1.salary, e2.salary));
 
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("student.ser"))) {
-            Student deserializedStudent = (Student) ois.readObject();
-            System.out.println("Student object has been deserialized.");
-            System.out.println("Student ID: " + deserializedStudent.getStudentID());
-            System.out.println("Name: " + deserializedStudent.getName());
-            System.out.println("Grade: " + deserializedStudent.getGrade());
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        System.out.println("Employees sorted by salary:");
+        employees.forEach(System.out::println);
     }
 }
